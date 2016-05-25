@@ -11,15 +11,19 @@
 #1. download process taken from http://code.tutsplus.com/articles/download-and-install-wordpress-via-the-shell-over-ssh--wp-24403
 wget http://wordpress.org/latest.tar.gz
 #2. extract
-tar xfz latest.tar.gz
-#clean up extraction
-mv wordpress core
-rm -f latest.tar.gz
+tar xfz latest.tar.gz & wait
+rm -f latest.tar.gz & wait
 
-cp core/index.php .
+#clean up extraction
+read -p "What would you like to name the core wordpress folder? Enter name: " cname
+mv wordpress $cname & wait
+
+#copy the index.php file - find and replace the redirect string to include the new core folder
+cp $cored/index.php . & wait
+sed -i -e "s/\/wp-blog-header.php/\/$cname\/wp-blog-header.php/g" index.php
 
 read -p "What would you like to name the content folder? Enter name: " name
-mv core/wp-content $name
+mv $cname/wp-content $name & wait
 
 read -p "This program comes with a special config folder. What would you like to name the config folder? Enter name: " config
 mkdir $config
