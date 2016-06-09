@@ -117,12 +117,19 @@ cat > $cname/wp-config.php <<END
  * - here we are using a require_once statement because php will check for us if the file is already included and will skip it if it is already included
  */
 
-require_once('$(pwd)/$config/dbcreds.php');
-require_once('$(pwd)/$config/salts.php');
-require_once('$(pwd)/$config/debug.php');
+/** Now we are going to define where our wp-content directory is **/
+define( 'WP_CONTENT_DIR',  dirname(__DIR__) . '/$name' );
+define( 'WP_CONTENT_URL', '/$name' );
 
-foreach (scandir('$(pwd)/$config') as \$filename) {
-    \$path = '$(pwd)/$config/' . \$filename;
+// this will fix the issue with the relative paths
+\$parent = dirname(__DIR__);
+
+require_once( \$parent . '/$config/dbcreds.php');
+require_once( \$parent . '/$config/salts.php');
+require_once( \$parent . '/$config/debug.php');
+
+foreach (scandir(\$parent . '/$config') as \$filename) {
+    \$path = \$parent . '/$config/' . \$filename;
     if (is_file(\$path)) {
         require_once(\$path);
     }
@@ -136,7 +143,7 @@ if ( !defined('ABSPATH') )
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-?>
+
 END
 
 #very last step - lets get a silence is golden index.php and put it in the config folder
